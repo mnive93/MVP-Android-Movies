@@ -1,7 +1,11 @@
 package co.sample.movielist.ui.moviegrid;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -29,6 +33,7 @@ public class MoviePresenter implements MovieContract.Presenter {
         mMovieView = movieView;
         mMovieView.setPresenter(this);
         dataRepository = DataRepository.getInstance(context);
+        context.registerReceiver(new NetworkBroadcastReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
@@ -52,7 +57,7 @@ public class MoviePresenter implements MovieContract.Presenter {
 
             @Override
             public void onNetworkFailure() {
-
+                mMovieView.isOffline();
             }
         });
     }
@@ -71,6 +76,33 @@ public class MoviePresenter implements MovieContract.Presenter {
         movieFilterType = filterType;
         CURRENT_PAGE = 1;
         getMovies();
+    }
+
+    @Override
+    public void onConnectionChanged(boolean isOnline) {
+        if(!isOnline) {
+
+        }
+    }
+
+    private class NetworkBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //... redacted code.../
+            final ConnectivityManager connMgr = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            final android.net.NetworkInfo wifi = connMgr
+                    .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+            final android.net.NetworkInfo mobile = connMgr
+                    .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+            if (wifi.isAvailable() || mobile.isAvailable()) {
+                return;
+            }
+            onConnectionChanged(false);
+        }
     }
 
 

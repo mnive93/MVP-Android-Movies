@@ -17,10 +17,12 @@ public interface MovieContract {
     interface View extends BaseView<Presenter> {
 
         void showMovies(List<Movie> movies);
+        void isOffline();
     }
 
     interface Presenter extends BasePresenter {
         void loadNextBatch();
         void setFilterType(MovieFilterType filterType);
+        void onConnectionChanged(boolean isOnline);
     }
 }
