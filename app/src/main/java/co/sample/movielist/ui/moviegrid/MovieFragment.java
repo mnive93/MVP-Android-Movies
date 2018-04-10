@@ -69,11 +69,13 @@ public class MovieFragment extends Fragment implements MovieContract.View {
         Snackbar offlineBar = Snackbar.make(root.findViewById(R.id.container),
                 R.string.offline_text, Snackbar.LENGTH_LONG);
         offlineBar.show();
+        Log.e(TAG, "Is offline");
         offlineText.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void isOnline() {
+        Log.e(TAG, "Is online");
         offlineText.setVisibility(View.GONE);
     }
 

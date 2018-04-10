@@ -96,6 +96,7 @@ public class MoviePresenter implements MovieContract.Presenter {
     private class NetworkBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.e(TAG, "Network broadcast receiver ");
             final ConnectivityManager connMgr = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -106,6 +107,7 @@ public class MoviePresenter implements MovieContract.Presenter {
                     .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
             if (wifi.isAvailable() || mobile.isAvailable()) {
+               //onConnectionChanged(true);
                 return;
             }
             onConnectionChanged(false);
