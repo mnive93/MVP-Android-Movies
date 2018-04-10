@@ -15,6 +15,7 @@ import java.util.Date;
 import co.sample.movielist.data.DataRepository;
 import co.sample.movielist.data.DataSource;
 import co.sample.movielist.model.MovieResponse;
+import co.sample.movielist.util.NetworkHelper;
 
 /**
  * Created by nivedita on 07/04/18.
@@ -28,9 +29,11 @@ public class MoviePresenter implements MovieContract.Presenter {
     private int CURRENT_PAGE = 1;
     private int TOTAL_PAGE;
     MovieFilterType movieFilterType = MovieFilterType.TOP_MOVIES;
+    Context context;
 
     public MoviePresenter(Context context, MovieContract.View movieView) {
         mMovieView = movieView;
+        this.context = context;
         mMovieView.setPresenter(this);
         dataRepository = DataRepository.getInstance(context);
         context.registerReceiver(new NetworkBroadcastReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -48,6 +51,9 @@ public class MoviePresenter implements MovieContract.Presenter {
             public void onSuccess(MovieResponse movieResponse) {
                 TOTAL_PAGE = movieResponse.getTotalPages();
                 mMovieView.showMovies(movieResponse.getResults());
+
+                if(CURRENT_PAGE == 1 && NetworkHelper.isNetworkAvailable(context))
+                    dataRepository.saveMovies(movieResponse.getResults());
             }
 
             @Override
@@ -64,7 +70,6 @@ public class MoviePresenter implements MovieContract.Presenter {
 
     @Override
     public void loadNextBatch() {
-        Log.d(TAG, "Total pages are " + TOTAL_PAGE);
         if(CURRENT_PAGE < TOTAL_PAGE) {
             CURRENT_PAGE += 1;
             getMovies();
@@ -81,14 +86,16 @@ public class MoviePresenter implements MovieContract.Presenter {
     @Override
     public void onConnectionChanged(boolean isOnline) {
         if(!isOnline) {
-
+            mMovieView.isOffline();
+        } else {
+            mMovieView.isOnline();
         }
     }
+
 
     private class NetworkBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //... redacted code.../
             final ConnectivityManager connMgr = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
 

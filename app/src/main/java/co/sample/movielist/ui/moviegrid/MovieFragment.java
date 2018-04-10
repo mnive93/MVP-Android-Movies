@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class MovieFragment extends Fragment implements MovieContract.View {
     RecyclerView detailsRV;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.offline_status)
+    TextView offlineText;
 
     public GridAdapter gridAdapter;
     View root;
@@ -66,7 +69,14 @@ public class MovieFragment extends Fragment implements MovieContract.View {
         Snackbar offlineBar = Snackbar.make(root.findViewById(R.id.container),
                 R.string.offline_text, Snackbar.LENGTH_LONG);
         offlineBar.show();
+        offlineText.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void isOnline() {
+        offlineText.setVisibility(View.GONE);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

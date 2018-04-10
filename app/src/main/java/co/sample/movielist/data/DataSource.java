@@ -27,6 +27,9 @@ public abstract class DataSource {
 
     public abstract void getPopularMovies(int page, GetMoviesCallback callback);
 
+    public abstract void getExistingMovies(GetMoviesCallback callback);
+
+    public abstract void saveMovies(List<Movie> movies);
 
     public abstract void saveFavourites(Movie movie, boolean isLiked, String movieId);
 

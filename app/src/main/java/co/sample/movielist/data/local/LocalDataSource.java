@@ -6,8 +6,11 @@ import co.sample.movielist.data.DataSource;
 import co.sample.movielist.data.remote.RemoteDataSource;
 import co.sample.movielist.model.Favourites;
 import co.sample.movielist.model.Movie;
+import co.sample.movielist.model.MovieResponse;
+import co.sample.movielist.util.MainUiThread;
 
 import static android.R.attr.author;
+import static android.R.attr.thickness;
 import static okhttp3.internal.Internal.instance;
 
 /**
@@ -17,9 +20,15 @@ import static okhttp3.internal.Internal.instance;
 public class LocalDataSource extends DataSource {
 
     private static LocalDataSource instance;
-    public static LocalDataSource getInstance() {
+    private MainUiThread uiThread;
+
+    public LocalDataSource(MainUiThread mainUiThread) {
+        uiThread = mainUiThread;
+    }
+
+    public static LocalDataSource getInstance(MainUiThread uiThread) {
         if (instance == null) {
-            instance = new LocalDataSource();
+            instance = new LocalDataSource(uiThread);
         }
         return instance;
     }
@@ -41,6 +50,34 @@ public class LocalDataSource extends DataSource {
     public void getPopularMovies(int page, GetMoviesCallback callback) {
 
     }
+
+    @Override
+    public void getExistingMovies(GetMoviesCallback callback) {
+        long count = Movie.count(Movie.class, null, null);
+        if( count > 0 ) {
+            List<Movie> movies = Movie.listAll(Movie.class);
+            MovieResponse response = new MovieResponse(1, movies, 1);
+            callback.onSuccess(response);
+        }
+
+    }
+
+    @Override
+    public void saveMovies(final List<Movie> movies) {
+
+        Runnable saveRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Movie.deleteAll(Movie.class);
+                for(Movie movie : movies) {
+                    movie.save();
+                }
+            }
+        };
+
+        new Thread(saveRunnable).start();
+    }
+
 
     @Override
     public void saveFavourites(Movie movie, boolean isLiked, String movieID) {

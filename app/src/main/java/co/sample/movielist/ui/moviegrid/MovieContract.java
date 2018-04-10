@@ -18,6 +18,7 @@ public interface MovieContract {
 
         void showMovies(List<Movie> movies);
         void isOffline();
+        void isOnline();
     }
 
     interface Presenter extends BasePresenter {

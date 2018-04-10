@@ -65,6 +65,16 @@ public class RemoteDataSource extends DataSource {
     }
 
     @Override
+    public void getExistingMovies(GetMoviesCallback callback) {
+
+    }
+
+    @Override
+    public void saveMovies(List<Movie> movies) {
+
+    }
+
+    @Override
     public void saveFavourites(Movie movie, boolean isLiked, String movieId) {
 
     }

@@ -9,6 +9,7 @@ import co.sample.movielist.data.local.LocalDataSource;
 import co.sample.movielist.data.remote.RemoteDataSource;
 import co.sample.movielist.model.Movie;
 import co.sample.movielist.ui.moviegrid.MovieFilterType;
+import co.sample.movielist.util.MainUiThread;
 import co.sample.movielist.util.NetworkHelper;
 
 /**
@@ -18,6 +19,7 @@ import co.sample.movielist.util.NetworkHelper;
 public class DataRepository{
     private DataSource remoteDataSource;
     private DataSource localDataSource;
+    private MainUiThread uiThread;
     public final String TAG = getClass().getSimpleName();
 
     private static DataRepository dataRepository;
@@ -25,8 +27,9 @@ public class DataRepository{
 
 
     public DataRepository(Context context) {
+        this.uiThread = MainUiThread.getInstance();
         this.remoteDataSource = RemoteDataSource.getInstance();
-        this.localDataSource = LocalDataSource.getInstance();
+        this.localDataSource = LocalDataSource.getInstance(uiThread);
         this.context = context;
 
     }
@@ -39,8 +42,12 @@ public class DataRepository{
     }
 
     public void getMovies(int page, MovieFilterType filterType, DataSource.GetMoviesCallback callback) {
-        if(!NetworkHelper.isNetworkAvailable(context))
+        if(!NetworkHelper.isNetworkAvailable(context)) {
             callback.onNetworkFailure();
+            Log.d(TAG, "Showing offline movies movies");
+            localDataSource.getExistingMovies(callback);
+
+        }
         else{
             if (filterType == MovieFilterType.TOP_MOVIES) {
                 remoteDataSource.getTopRatedMovies(page, callback);
@@ -52,6 +59,10 @@ public class DataRepository{
         }
     }
 
+
+    public void saveMovies(List<Movie> movies) {
+        localDataSource.saveMovies(movies);
+    }
 
     public void saveFavourites(Movie movie, boolean liked, String movieId) {
         localDataSource.saveFavourites(movie, liked, movieId);
