@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="co.sample.movielist.ui.moviedetail.MovieDetailsActivity">
+    <item
+        android:id="@+id/action_top_movies"
+        android:title="Top rated movies"
+        />
+
+    <item
+        android:id="@+id/action_popular_movies"
+        android:title="Popular movies"
+         />
+</menu>
