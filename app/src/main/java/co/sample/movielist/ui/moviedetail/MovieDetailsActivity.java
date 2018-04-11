@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import butterknife.ButterKnife;
 import co.sample.movielist.R;
 
+import static co.sample.movielist.R.id.toolbar;
+
 public class MovieDetailsActivity extends AppCompatActivity {
 
     MovieDetailContract.Presenter mPresenter;

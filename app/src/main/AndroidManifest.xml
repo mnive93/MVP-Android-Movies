@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:name="com.orm.SugarApp"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.moviegrid.MovieGridActivity">
+        <activity android:name=".ui.moviegrid.MovieGridActivity"
+            android:label="Movies"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

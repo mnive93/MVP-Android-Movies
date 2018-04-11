@@ -69,12 +69,24 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
         collapsingToolbarLayout.setTitleEnabled(false);
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         toolbar.setTitle(movie.getTitle());
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleOnBackPress();
+            }
+        });
         movieRelease.setText(mPresenter.formatDate(movie.getReleaseDate()));
         movieRating.setText(movie.getVoteAverage() + "");
         mPresenter.getIsLiked(String.valueOf(movie.getMovieId()));
 
         return root;
 
+    }
+
+    public void handleOnBackPress() {
+        getActivity().finish();
     }
 
     @Override
@@ -93,6 +105,8 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
         }
         mPresenter.markAsFavourite(movie, isLiked);
     }
+
+
 
     @Override
     public void showLiked(boolean isLiked) {
