@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:name=".ui.moviedetail.MovieDetailsActivity"
-            android:label="@string/title_activity_movie_details"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <meta-data android:name="DATABASE" android:value="tmdb.db" />
